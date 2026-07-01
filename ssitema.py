@@ -55,7 +55,7 @@ universidades = [
         "fortalezas": ["salud", "negocios", "arte", "sociales"]
     },
     {
-        "nombre": "UNAB",
+        "nombre": "UNAB (Universidad Autónoma de Bucaramanga)",
         "ciudades": ["Bucaramanga"],
         "tipo": "privada",
         "prestigio": "medio",
@@ -64,7 +64,7 @@ universidades = [
         "fortalezas": ["negocios", "ingenieria", "comunicacion"]
     },
     {
-        "nombre": "UDES",
+        "nombre": "UDES (Universidad de Santander)",
         "ciudades": ["Bucaramanga"],
         "tipo": "privada",
         "prestigio": "medio",
@@ -73,7 +73,7 @@ universidades = [
         "fortalezas": ["salud", "negocios"]
     },
     {
-        "nombre": "UNAD",
+        "nombre": "UNAD (Universidad Nacional Abierta y a Distancia)",
         "ciudades": ["virtual"],
         "tipo": "pública",
         "prestigio": "medio",
@@ -129,37 +129,46 @@ def entrada_texto(mensaje):
 def evaluar_universidad(univ, perfil):
     score = 0
 
-    # Ciudad estricta
-    if perfil["ciudad"].lower() not in [c.lower() for c in univ["ciudades"]]:
-        return -999  # descarta totalmente
-
-    # Tipo estricta
-    if perfil["tipo"] != univ["tipo"]:
-        return -999  # descarta totalmente
-
-    # Reglas normales
-    if perfil["modalidad"] in univ["modalidades"]:
-        score += 3
-
-    if perfil["prestigio"] == "alto" and univ["prestigio"] == "alto":
-        score += 3
-    elif perfil["prestigio"] == "medio" and univ["prestigio"] in ["medio", "alto"]:
-        score += 2
+    ciudad = perfil["ciudad"]
+    if ciudad.lower() == "santander":
+        if "Bucaramanga" in univ["ciudades"]:
+            score += 3
     else:
-        score += 1
+        for c in univ["ciudades"]:
+            if ciudad.lower() in c.lower():
+                score += 3
+
+    if perfil["tipo"] == univ["tipo"]:
+        score += 2
 
     presupuesto = perfil["presupuesto"]
     costo = univ["costo"]
-    if presupuesto == "muy_bajo" and costo in ["muy_bajo", "bajo"]:
-        score += 3
-    elif presupuesto == "bajo" and costo in ["bajo", "medio"]:
-        score += 2
-    elif presupuesto == "medio" and costo in ["medio", "alto"]:
-        score += 2
+    if presupuesto == "muy_bajo":
+        if costo in ["muy_bajo", "bajo"]:
+            score += 3
+    elif presupuesto == "bajo":
+        if costo in ["bajo", "medio"]:
+            score += 2
+    elif presupuesto == "medio":
+        if costo in ["medio", "alto"]:
+            score += 2
     elif presupuesto == "alto":
         score += 1
 
-    if perfil["area"] in univ["fortalezas"]:
+    if perfil["modalidad"] in univ["modalidades"]:
+        score += 3
+
+    if perfil["prestigio"] == "alto":
+        if univ["prestigio"] == "alto":
+            score += 3
+    elif perfil["prestigio"] == "medio":
+        if univ["prestigio"] in ["medio", "alto"]:
+            score += 2
+    elif perfil["prestigio"] == "bajo":
+        score += 1
+
+    area = perfil["area"]
+    if area in univ["fortalezas"]:
         score += 4
 
     return score
@@ -168,8 +177,7 @@ def recomendar_universidades(perfil):
     resultados = []
     for univ in universidades:
         s = evaluar_universidad(univ, perfil)
-        if s >= 0:  # solo universidades válidas
-            resultados.append((univ["nombre"], s))
+        resultados.append((univ["nombre"], s))
 
     resultados.sort(key=lambda x: x[1], reverse=True)
     return resultados
@@ -186,7 +194,7 @@ def main():
     # PRIMERA PREGUNTA: ICFES
     icfes = int(entrada_texto("¿Cuál fue tu puntaje ICFES? (ej: 350, 380): "))
 
-    # REGLA NUEVA
+    # REGLA NUEVA: si ICFES <= 370, solo privada
     if icfes > 370:
         tipo = preguntar_opcion(
             "\nTu puntaje te permite escoger entre pública o privada. ¿Cuál prefieres?",
@@ -196,7 +204,7 @@ def main():
         print("\nTu puntaje ICFES indica que solo puedes aplicar a universidades PRIVADAS.")
         tipo = "privada"
 
-    ciudad = entrada_texto("\n¿En qué ciudad quieres estudiar? (ej: Bucaramanga, Bogotá, Medellín, virtual): ")
+    ciudad = entrada_texto("\n¿En qué ciudad o región quieres estudiar? (ej: Bucaramanga, Bogotá, Santander, virtual): ")
 
     area = preguntar_opcion(
         "\n¿Qué área se parece más a la carrera que quieres estudiar?",
@@ -239,15 +247,11 @@ def main():
     print(" RECOMENDACIONES DE UNIVERSIDAD")
     print("=======================================\n")
 
-    if not recomendaciones:
-        print("No se encontraron universidades que cumplan con tus criterios.")
-    else:
-        for nombre, score in recomendaciones[:5]:
-            print(f"- {nombre} (puntaje: {score})")
+    for nombre, score in recomendaciones[:5]:
+        print(f"- {nombre} (puntaje: {score})")
 
     print("\nInterpretación:")
     print("Mientras más alto el puntaje, más se ajusta la universidad a tu perfil.\n")
 
 if __name__ == "__main__":
     main()
-
