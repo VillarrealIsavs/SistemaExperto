@@ -78,58 +78,54 @@ El motor aplica reglas como:
 
 ---
 
-## 📂 Estructura del Proyecto
+1. Nodos de entrada (preguntas del sistema experto)
+Nodos de entrada:
+•	Puntaje ICFES
+•	Tipo de universidad (pública / privada / indiferente)
+•	Carrera deseada
+•	Departamento
+•	Municipio
+•	Disposición a mudarse
+•	Presupuesto por semestre
+•	Interés en beca
+•	Interés en crédito educativo
+•	Puntaje histórico en el colegio
+2. Nodos de reglas (base de conocimiento)
+Nodos de reglas:
+•	R1: Puntaje alto + pública → alta demanda
+•	R2: Puntaje bajo + pública → revisar ponderado / repetir examen
+•	R3: Privada + presupuesto alto → acceso amplio
+•	R4: Privada + presupuesto bajo → buscar becas/financiación
+•	R5: Puntaje alto + beca → becas por mérito
+•	R6: No mudarse → universidades cercanas
+•	R7: Sí mudarse → universidades de todo el país
+•	R8: Ingeniería → prioridad universidades fuertes en ingeniería
+•	R9: Medicina → prioridad universidades con hospitales
+•	R10: Derecho → prioridad universidades fuertes en derecho
 
-```
-📁 sistema-experto-universidades
-│
-├── README.md
-└── sistema_experto.py
-```
 
----
+3. Nodos de salida (universidades recomendadas)
+Nodos de salida:
+•	Universidad Nacional
+•	Universidad de los Andes
+•	Pontificia Universidad Javeriana
+•	Universidad de Antioquia
+•	Universidad del Valle
+•	Universidad Industrial de Santander (UIS)
+•	Universidad EAFIT
+•	Universidad del Rosario
+•	Universidad de La Sabana
+•	Universidad del Norte
+4. Nodos conceptuales del problema (del documento Problematica.pdf)
+Nodos conceptuales:
+•	Problema: elección de carrera y universidad
+•	Causas: falta de información, presión social, desconocimiento de habilidades
+•	Consecuencias: deserción, mala elección, pérdida de tiempo/dinero
+•	Objetivo del sistema: orientar con base en reglas y conocimiento experto
+•	Usuarios: estudiantes, bachilleres, orientadores
+•	Beneficios: reducir deserción, mejorar decisiones, ahorrar tiempo
 
-## ▶️ Cómo Ejecutarlo
 
-1. Instala Python 3.8+  
-2. Ejecuta el archivo:
-
-```bash
-python sistema_experto.py
-```
-
-3. Responde las preguntas en consola.  
-4. Recibe las recomendaciones personalizadas.
-
----
-
-## 🧪 Ejemplo de Uso
-
-```
-¿Cuál fue tu puntaje ICFES? 350
-Tu puntaje solo permite aplicar a PRIVADAS.
-
-¿En qué ciudad quieres estudiar? Bogotá
-¿Qué área te interesa? ingeniería
-¿Cuánto puedes pagar al mes? 2500000
-¿Qué tan importante es el prestigio? alto
-```
-
-**Resultado:**
-
-- Universidad Javeriana  
-- Universidad del Rosario  
-- Universidad de los Andes  
-
----
-
-## 🚀 Mejoras Futuras
-
-- Interfaz gráfica (Tkinter o PyQt)
-- Versión web (Flask o FastAPI)
-- Sistema de becas y financiación
-- Recomendación de carreras específicas
-- Integración con mapas y geolocalización
 
 ---
 
